@@ -17,7 +17,9 @@ In your ghost config.js file under "development" and "production" add
 	    accessKeyId: 'your aws access key id>',
 	    secretAccessKey: 'your AWS secret access key>',
 	    bucket: 'your-bucket-name',
-	    region: 'the AWS region your bucket is in'
+	    region: 'the AWS region your bucket is in',
+        customDomain: 'example.com',
+        isSecure: false
 	},
 
 
