@@ -65,7 +65,9 @@ module.exports.save = function(image) {
 // middleware for serving the files
 module.exports.serve = function() {
     // a no-op, these are absolute URLs
-    return function(){};
+    return function (req, res, next) {
+        next();
+    };
 };
 
 
