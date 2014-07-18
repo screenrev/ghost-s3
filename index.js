@@ -45,7 +45,7 @@ module.exports.save = function(image) {
             ACL: 'public-read',
             Body: buffer,
             ContentType: image.type,
-            CacheControl: 'maxage=' + (30 * 24 * 60 * 60) // 30 days
+            CacheControl: 'max-age=' + (30 * 24 * 60 * 60) // 30 days
         });
     })
     .then(function(result) {
