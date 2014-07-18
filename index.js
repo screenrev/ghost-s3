@@ -42,9 +42,10 @@ module.exports.save = function(image) {
         return nodefn.call(s3.putObject.bind(s3), {
             Bucket: config.bucket,
             Key: targetFilename,
+            ACL: 'public-read',
             Body: buffer,
             ContentType: image.type,
-            CacheControl: 'maxage=' + (30 * 24 * 60 * 60) // 30 days
+            CacheControl: 'max-age=' + (365 * 24 * 60 * 60) // 1 year
         });
     })
     .then(function(result) {
@@ -64,7 +65,9 @@ module.exports.save = function(image) {
 // middleware for serving the files
 module.exports.serve = function() {
     // a no-op, these are absolute URLs
-    return function(){};
+    return function (req, res, next) {
+        next();
+    };
 };
 
 
