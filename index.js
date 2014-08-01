@@ -34,7 +34,7 @@ module.exports.save = function(image) {
 
     var targetDir = getTargetDir();
     var targetFilename = getTargetName(image, targetDir);
-    var awsPath = 'https://' + config.bucket + '.s3.amazonaws.com/';
+    var awsPath = 'https://s3.amazonaws.com/' + config.bucket + '/';
     
     // In case using third party CDN (cloudflare-s3 integration, etc)
     var cdnPath = config.cdnPath ? config.cdnPath : awsPath
@@ -75,8 +75,8 @@ module.exports.serve = function() {
 
 
 var MONTHS = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    '01', '02', '03', '04', '05', '06',
+    '07', '08', '09', '10', '11', '12'
 ];
 var getTargetDir = function() {
     var now = new Date();
