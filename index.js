@@ -1,3 +1,4 @@
+// TODO > set custom url for s3 file (for cloudflare cdn purpose - cname stuff)
 'use strict';
 
 // # S3 storage module for Ghost blog http://ghost.org/
@@ -34,6 +35,9 @@ module.exports.save = function(image) {
     var targetDir = getTargetDir();
     var targetFilename = getTargetName(image, targetDir);
     var awsPath = 'https://' + config.bucket + '.s3.amazonaws.com/';
+    
+    // In case using third party CDN (cloudflare-s3 integration, etc)
+    var cdnPath = config.cdnPath ? config.cdnPath : awsPath
 
     return readFile(image.path)
     .then(function(buffer) {
@@ -42,17 +46,16 @@ module.exports.save = function(image) {
         return nodefn.call(s3.putObject.bind(s3), {
             Bucket: config.bucket,
             Key: targetFilename,
-            ACL: 'public-read',
             Body: buffer,
             ContentType: image.type,
-            CacheControl: 'max-age=' + (365 * 24 * 60 * 60) // 1 year
+            CacheControl: 'max-age=' + (30 * 24 * 60 * 60) // 1 month
         });
     })
     .then(function(result) {
         return unlink(image.path);
     })
     .then(function() {
-        return when.resolve(awsPath + targetFilename);
+        return when.resolve(cdnPath + targetFilename);
     })
     .catch(function(err) {
         unlink(image.path);
