@@ -80,7 +80,9 @@ var MONTHS = [
 ];
 var getTargetDir = function() {
     var now = new Date();
-    return path.join(now.getFullYear() + '', MONTHS[now.getMonth()]) + '/';
+    var prefix = config.prefixPath ? config.prefixPath : ''
+    return path.join(prefix, now.getFullYear() + '', 
+        MONTHS[now.getMonth()]) + '/';
 };
 
 

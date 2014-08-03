@@ -18,7 +18,8 @@ In your ghost config.js file under "development" and "production" add
 	    secretAccessKey: 'your AWS secret access key>',
 	    bucket: 'your-bucket-name',
 	    region: 'the AWS region your bucket is in',
-	    cdnPath: 'path to CDN (e.g. Cloudflare & S3 integration - leave blank if using Amazon CloudFront)'
+	    cdnPath: 'path to CDN (e.g. Cloudflare & S3 integration - leave blank if using Amazon CloudFront)',
+	    prefixPath: 'prefix folder (e.g. images)'
 	},
 
 
