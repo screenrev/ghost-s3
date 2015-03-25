@@ -28,15 +28,15 @@ In your ghost config.js file under "development" and "production" add
 Until Ghost has a file module system, you will have to change the file ```storage/index```
 
 ```javascript
-	storage = require('./' + storageChoice);
+	storage[storageChoice] = require('./' + storageChoice);
 ```
 
 becomes
 
 ```javascript
-	storage = require('ghost-s3')({
-	    errors: errors,
-	    config: require('../config')().aws
+	storage[storageChoice] = require('ghost-s3')({
+    errors: errors,
+    config: require('../config').aws
 	});
 ```
 
