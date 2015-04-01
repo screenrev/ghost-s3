@@ -17,7 +17,9 @@ In your ghost config.js file under "development" and "production" add
 	    accessKeyId: 'your aws access key id>',
 	    secretAccessKey: 'your AWS secret access key>',
 	    bucket: 'your-bucket-name',
-	    region: 'the AWS region your bucket is in'
+	    region: 'the AWS region your bucket is in',
+	    cdnPath: 'path to CDN (e.g. Cloudflare & S3 integration - leave blank if using Amazon CloudFront)',
+	    prefixPath: 'prefix folder (e.g. images)'
 	},
 
 
@@ -26,15 +28,15 @@ In your ghost config.js file under "development" and "production" add
 Until Ghost has a file module system, you will have to change the file ```storage/index```
 
 ```javascript
-	storage = require('./' + storageChoice);
+	storage[storageChoice] = require('./' + storageChoice);
 ```
 
 becomes
 
 ```javascript
-	storage = require('ghost-s3')({
-	    errors: errors,
-	    config: require('../config')().aws
+	storage[storageChoice] = require('ghost-s3')({
+    errors: errors,
+    config: require('../config').aws
 	});
 ```
 

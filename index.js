@@ -1,3 +1,4 @@
+// TODO > set custom url for s3 file (for cloudflare cdn purpose - cname stuff)
 'use strict';
 
 // # S3 storage module for Ghost blog http://ghost.org/
@@ -33,7 +34,10 @@ module.exports.save = function(image) {
 
     var targetDir = getTargetDir();
     var targetFilename = getTargetName(image, targetDir);
-    var awsPath = 'https://' + config.bucket + '.s3.amazonaws.com/';
+    var awsPath = 'https://s3.amazonaws.com/' + config.bucket + '/';
+    
+    // In case using third party CDN (cloudflare-s3 integration, etc)
+    var cdnPath = config.cdnPath ? config.cdnPath : awsPath
 
     return readFile(image.path)
     .then(function(buffer) {
@@ -44,14 +48,14 @@ module.exports.save = function(image) {
             Key: targetFilename,
             Body: buffer,
             ContentType: image.type,
-            CacheControl: 'maxage=' + (30 * 24 * 60 * 60) // 30 days
+            CacheControl: 'max-age=' + (30 * 24 * 60 * 60) // 1 month
         });
     })
     .then(function(result) {
         return unlink(image.path);
     })
     .then(function() {
-        return when.resolve(awsPath + targetFilename);
+        return when.resolve(cdnPath + targetFilename);
     })
     .catch(function(err) {
         unlink(image.path);
@@ -64,17 +68,21 @@ module.exports.save = function(image) {
 // middleware for serving the files
 module.exports.serve = function() {
     // a no-op, these are absolute URLs
-    return function(){};
+    return function (req, res, next) {
+        next();
+    };
 };
 
 
 var MONTHS = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    '01', '02', '03', '04', '05', '06',
+    '07', '08', '09', '10', '11', '12'
 ];
 var getTargetDir = function() {
     var now = new Date();
-    return path.join(now.getFullYear() + '', MONTHS[now.getMonth()]) + '/';
+    var prefix = config.prefixPath ? config.prefixPath : ''
+    return path.join(prefix, now.getFullYear() + '', 
+        MONTHS[now.getMonth()]) + '/';
 };
 
 
